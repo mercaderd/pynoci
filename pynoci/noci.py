@@ -10,7 +10,26 @@ from skimage.util import colormap
 
 
 def dw(r):
+    """
+    dw = DW(R) is an n*1 matrix with Durbin-Watson (DW) criterion for temporal
+    series in rows of nxT matrix R. Each row of R is consideres as a
+    temporal serie.
+
+    Durbin-Criterion.  Version 1  Oct 2016
+
+    Usage:
+       * If r is an nxT data matrix (n sensors, T samples) then
+         dw=DW(r) is a nx1 matrix such that every element is the DW criterion
+         of each row in R.
+
+    Author: Daniel Mercader (mercaderd@yahoo.es)
+    Universidad Nacional de Educación a Distancia
+
+    :param r: nxT data matrix (n sensors, T samples)
+    :return: nx1 matrix such that every element is the DW criterion of each row in r.
+
     # Function validated with MATLAB data
+    """
     assert isinstance(r, ndarray), \
         "r (input data matrix) is of the wrong type (%s)" % type(r)
     assert r.ndim == 2, "X has %d dimensions, should be 2" % r.ndim
@@ -24,6 +43,25 @@ def dw(r):
 
 
 def dwcriterion(X,maxICs=None,verbose=1):
+    """
+    DWCriterion Optimal Number of Independant Components determination by Durbin-Watson Criteria
+
+    Input parameters:
+        X: MxN matrix. N samples of M sensors.
+        maxICs: maximun ICs for calculations
+        verbose: 0 No verbose, 1 plot DWMatrix, 2 plot residual matrices
+
+    Output parameters:
+        DWMatrix: M x maxICs matrix with Durbin Watson of residual matrices
+
+    Author: Daniel Mercader (mercaderd@yahoo.es)
+    Universidad Nacional de Educación a Distancia
+
+    :param X: MxN matrix. N samples of M sensors.
+    :param maxICs: maximun ICs for calculations
+    :param verbose: 0 No verbose, 1 plot DWMatrix
+    :return: M x maxICs matrix with Durbin Watson of residual matrices
+    """
     assert isinstance(X, ndarray), \
         "X (input data matrix) is of the wrong type (%s)" % type(X)
     X = matrix(X.astype(float64))
@@ -65,6 +103,25 @@ def dwcriterion(X,maxICs=None,verbose=1):
 
 
 def ICA_by_two_blocks(X,maxICs=None,verbose=1):
+    """
+    ICA_by_two_blocks Optimal Number of Independant Components determination with ICA by blocks method
+
+    Input parameters:
+        X: MxN matrix. N samples of M sensors.
+        maxICs: maximun ICs for calculations
+    verbose: 0 no verbose, 1 plot correlation_data
+
+    Output parameters:
+        correlation_data: Cell Array with correlation data
+
+    Author: Daniel Mercader (mercaderd@yahoo.es)
+    Universidad Nacional de Educación a Distancia
+
+    :param X: MxN matrix. N samples of M sensors.
+    :param maxICs: maximun ICs for calculations
+    :param verbose: 0 no verbose, 1 plot correlation_data
+    :return: list with correlation data matrices
+    """
     assert isinstance(X, ndarray), \
         "X (input data matrix) is of the wrong type (%s)" % type(X)
     X = matrix(X.astype(float64))
@@ -108,13 +165,28 @@ def ICA_by_two_blocks(X,maxICs=None,verbose=1):
     return correlation_data
 
 
-def lcc(X, threshold = 0.1, verbose=1):
+def lcc(X, threshold = 0.1):
+    """
+    Optimal Number of Independant Components determination with Linear Component Correlation method
+
+    Input parameters:
+        X: MxN matrix. N samples of M sensors.
+        threshold: linear correlation threshold to stop algorithm
+
+    Output parameters:
+        NOCI: Optimal Number of Independant Components
+
+    Author: Daniel Mercader (mercaderd@yahoo.es)
+    Universidad Nacional de Educación a Distancia
+
+    :param X: MxN matrix. N samples of M sensors.
+    :param threshold: linear correlation threshold to stop algorithm
+    :return: Optimal Number of Independant Components
+    """
     assert isinstance(X, ndarray), \
         "X (input data matrix) is of the wrong type (%s)" % type(X)
     X = matrix(X.astype(float64))
     assert X.ndim == 2, "X has %d dimensions, should be 2" % X.ndim
-    assert (verbose == 0) or (verbose == 1) or (verbose == 2), \
-        "verbose parameter should be either 0 or 1 or 2"
     [n, T] = X.shape
     assert n < T, "number of sensors must be smaller than number of samples"
     assert threshold > 0, "threshold must be higher than zero"
@@ -148,7 +220,7 @@ def main():
     X = np.dot(A, S)  # Generate observations
     print(dwcriterion(X,maxICs=15,verbose=1))
     print(ICA_by_two_blocks(X,maxICs=10,verbose=1))
-    print(lcc(X,threshold=0.1,verbose=1))
+    print(lcc(X,threshold=0.1))
 
 if __name__ == "__main__":
     sys.exit(main())
