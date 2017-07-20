@@ -141,7 +141,6 @@ def ICA_by_two_blocks(X,maxICs=None,verbose=1):
     for i in range(nblocks):
         blocks[:,:, i]=X[(i * block_length):((i+1) * block_length),:]
     correlation_data = []
-    print(maxICs)
     for i in arange(maxICs):
         B1 = jadeR(blocks[:, :, 0], m=i + 1)
         B2 = jadeR(blocks[:, :, 1], m=i + 1)
